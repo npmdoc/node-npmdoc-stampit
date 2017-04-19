@@ -63,6 +63,15 @@
 
         <li>
 
+            <a class="apidocElementLiA" href="#apidoc.element.stampit.stampit">
+            function <span class="apidocSignatureSpan"></span>stampit
+            <span class="apidocSignatureSpan">()</span>
+            </a>
+
+        </li>
+
+        <li>
+
             <a class="apidocElementLiA" href="#apidoc.element.stampit.compose">
             function <span class="apidocSignatureSpan">stampit.</span>compose
             <span class="apidocSignatureSpan">()</span>
@@ -247,6 +256,50 @@
 
 <div class="apidocSectionDiv">
 <h1><a href="#apidoc.module.stampit" id="apidoc.module.stampit">module stampit</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.stampit.stampit" id="apidoc.element.stampit.stampit">
+        function <span class="apidocSignatureSpan"></span>stampit
+        <span class="apidocSignatureSpan">()</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function stampit() {
+  var args = [], len = arguments.length;
+  while ( len-- ) args[ len ] = arguments[ len ];
+
+  var composables = args.filter(isObject)
+    .map(function (arg) { return isStamp(arg) ? arg : standardiseDescriptor(arg); });
+
+  // Calling the standard pure compose function here.
+  var stamp = compose.apply(this || baseStampit, composables);
+
+  var composerFunctions = stamp.compose.deepConfiguration &#x26;&#x26;
+    stamp.compose.deepConfiguration.composers;
+  if (isArray(composerFunctions) &#x26;&#x26; composerFunctions.length &#x3e; 0) {
+    var uniqueComposers = [];
+    for (var i = 0; i &#x3c; composerFunctions.length; i += 1) {
+      var composer = composerFunctions[i];
+      if (isFunction(composer) &#x26;&#x26; !uniqueComposers.includes(composer)) {
+        uniqueComposers.push(composer);
+      }
+    }
+    stamp.compose.deepConfiguration.composers = uniqueComposers;
+
+    if (isStamp(this)) { composables.unshift(this); }
+    for (var i$1 = 0; i$1 &#x3c; uniqueComposers.length; i$1 += 1) {
+      var composer$1 = uniqueComposers[i$1];
+      var returnedValue = composer$1({stamp: stamp, composables: composables});
+      stamp = isStamp(returnedValue) ? returnedValue : stamp;
+    }
+  }
+
+  return stamp;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
 
 
     <h2>
